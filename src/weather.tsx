@@ -1,22 +1,12 @@
-import React, { useEffect, useState } from 'react';
+import { useSelector } from 'react-redux';
 import './App.css';
-import { useQuery } from '@apollo/client'
-import { LOAD_WEATHER } from './GraphQL/queries'
-import { GetCityByName, WeatherData } from './GraphQL/queryTypes';
 
-interface LoadWeatherVars {
-    name: String;
-    units: String;
+import { WeatherData } from './GraphQL/queryTypes';
+import { State } from './redux-toolkit';
 
-}
+
 function App() {
-    const { error, loading, data } = useQuery<GetCityByName, LoadWeatherVars>(LOAD_WEATHER, { variables: { name: "cairo", units: "metric" } })
-    const [weather, setWeather] = useState<WeatherData | undefined>()
-    useEffect(() => {
-        if (data) {
-            setWeather(data.getCityByName)
-        }
-    })
+    const weather: WeatherData = useSelector((state: State) => state.weatherData)
     return (
         <p>
             {JSON.stringify(weather)}

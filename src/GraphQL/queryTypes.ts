@@ -3,16 +3,16 @@ type Coordinates = {
     lat: number,
 }
 type City = {
-    id: String | number,
-    name: String
-    country: String
+    id: string | number,
+    name: string
+    country: string
     coord: Coordinates
     weather: Weather
 }
 type Summary = {
-    title: String,
-    description: String,
-    icon: String
+    title: string,
+    description: string,
+    icon: string
 }
 type Temperature = {
     actual: number,
@@ -37,9 +37,9 @@ type Weather = {
     timestamp: number
 }
 export type WeatherData = {
-    id: String | number,
-    name: String
-    country: String
+    id: string | number,
+    name: string
+    country: string
     coord: Coordinates
     weather: Weather
 }

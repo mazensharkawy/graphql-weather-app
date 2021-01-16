@@ -4,6 +4,7 @@ import './App.css';
 import { ApolloClient, InMemoryCache, ApolloProvider, HttpLink, from, useQuery } from '@apollo/client'
 import { onError } from '@apollo/client/link/error'
 import Weather from "./weather"
+import Search from './search';
 
 const errorLink = onError(({ graphQLErrors, networkError }) => {
   if (graphQLErrors) {
@@ -19,6 +20,7 @@ const client = new ApolloClient({
 function App() {
   return (
     <ApolloProvider client={client}>
+      <Search/>
       <Weather/>
     </ApolloProvider>
   );
