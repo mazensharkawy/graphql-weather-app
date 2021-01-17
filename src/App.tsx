@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import logo from './logo.svg';
 import './App.css';
 import { ApolloClient, InMemoryCache, ApolloProvider, HttpLink, from, useQuery } from '@apollo/client'
 import { onError } from '@apollo/client/link/error'
