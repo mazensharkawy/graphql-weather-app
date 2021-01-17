@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { editSearchInput, State, setUnits, setWeatherData } from './redux-toolkit';
+import { editSearchInput, State, setUnits, setWeatherData, fetchWeatherByCity } from './redux-toolkit';
 import { useDispatch, useSelector } from 'react-redux';
 import { GetCityByName } from './GraphQL/queryTypes';
 import { useQuery } from '@apollo/client';
@@ -61,28 +61,21 @@ color: #717171;
 }
 `
 
-interface LoadWeatherVars {
-    name: String;
-    units: String;
-}
 
 const UNIT_OPTIONS: string[] = ["metric", "kelvin", "imperial"]
 const upperFirst = (name: string): string => name.charAt(0).toUpperCase() + name.slice(1)
 function Search() {
     const { city, units } = useSelector((state: State) => state.weatherSettings)
     const dispatch = useDispatch();
-    const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) =>
-        dispatch(editSearchInput(event.target.value))
+    const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+      dispatch(editSearchInput(event.target.value))
+      dispatch(fetchWeatherByCity())
+    }
 
-    const handleUnitsChange = (event: React.ChangeEvent<HTMLSelectElement>) =>
-        dispatch(setUnits(event.target.value))
-    let { error, loading, data } = useQuery<GetCityByName, LoadWeatherVars>(LOAD_WEATHER, { variables: { name: city, units } })
-
-    useEffect(() => {
-        if (data) {
-            dispatch(setWeatherData(data.getCityByName))
-        }
-    })
+    const handleUnitsChange = (event: React.ChangeEvent<HTMLSelectElement>) =>{
+      dispatch(setUnits(event.target.value))
+      dispatch(fetchWeatherByCity())
+    }
     return (
         <Container>
             <Input placeholder="Search Weather By City" type="text" value={city} onChange={handleInputChange} />

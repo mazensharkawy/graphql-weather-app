@@ -1,6 +1,8 @@
-import { createSlice, PayloadAction, configureStore, getDefaultMiddleware } from "@reduxjs/toolkit"
-import { WeatherData, } from "../GraphQL/queryTypes"
+import { createSlice, PayloadAction, configureStore, getDefaultMiddleware, createAsyncThunk } from "@reduxjs/toolkit"
+import { GetCityByName, WeatherData, } from "../GraphQL/queryTypes"
 import logger from "redux-logger"
+import { client } from "../App"
+import { LOAD_WEATHER } from "../GraphQL/queries"
 type WeatherSettings = {
     city: string,
     units: string
@@ -12,9 +14,26 @@ const WeatherSettingsInitialState: WeatherSettings = {
     city: "",
     units: "metric"
 }
+interface LoadWeatherVars {
+    name: String;
+    units: String;
+}
+export const fetchWeatherByCity = createAsyncThunk(
+    'users/fetchWeatherByCity',
+    async (arg, thunkAPI) => {
+        const state = <State>thunkAPI.getState()
+        const { city, units }: WeatherSettings = state.weatherSettings
+        const data = await client.query<{ query: GetCityByName, variables: LoadWeatherVars }>({ query: LOAD_WEATHER, variables: { name: city, units } })
+        return data.data
+    }
+)
 const weatherData = createSlice({
     name: 'weatherData', initialState: WeatherDataInitialState, reducers: {
         setWeatherData: (state, action: PayloadAction<WeatherData>) => state = action.payload,
+    },
+    extraReducers: {
+        [fetchWeatherByCity.fulfilled.toString()]: (state, action) => action?.payload?.getCityByName
+
     }
 })
 const weatherSettings = createSlice({
@@ -25,7 +44,7 @@ const weatherSettings = createSlice({
 })
 
 export const {
-    setWeatherData
+    setWeatherData,
 } = weatherData.actions
 
 export const {

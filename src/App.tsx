@@ -12,7 +12,7 @@ const errorLink = onError(({ graphQLErrors, networkError }) => {
 })
 
 const link = from([errorLink, new HttpLink({ uri: "http://graphql-weather-api.herokuapp.com/graphql" })])
-const client = new ApolloClient({
+export const client = new ApolloClient({
   cache: new InMemoryCache(),
   link
 })
